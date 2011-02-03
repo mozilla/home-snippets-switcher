@@ -1,5 +1,10 @@
 var Options = (function () {
 
+    var DEFAULT_PRESETS = [
+        ['Production', 'http://snippets.mozilla.com/%STARTPAGE_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/'],
+        ['Staging', 'http://snippets.stage.mozilla.com/%STARTPAGE_VERSION%/%NAME%/%VERSION%/%APPBUILDID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/'],
+    ];
+
     var $this = {
 
         update_url: null,
@@ -11,13 +16,57 @@ var Options = (function () {
         ],
 
         init: function () {
+            $this.presets = JSON.parse(localStorage["presets"])
+            if (!$this.presets) {
+                $this.presets = DEFAULT_PRESETS; 
+                localStorage["presets"] = JSON.stringify($this.presets);
+            }
+            console.log("PRESETS " + $this.presets.length);
+
             $(document).ready($this.ready);
+
             return this;
         },
 
         ready: function () {
-
             $this.createFields();
+            // TODO: Make this work!
+            // $this.createPresets();
+            $this.wireUpControls();
+            postMessage({ type: 'fetch_update_url' });
+        },
+
+        onMessage: function (event) {
+            switch (event.type) {
+                case 'receive_update_url':
+                    $this.update_url = event.update_url;
+                    $this.updateFields($this.parseUrlFields($this.update_url));
+                    break;
+            };
+        },
+
+        createFields: function () {
+            var url_fields = $('#option_controls ul.url_fields');
+            $('li:not(.template)', url_fields).remove();
+            var tmpl = $('li.template', url_fields);
+
+            for (var i=0, name; name=$this.fields[i]; i++) {
+                tmpl.cloneTemplate({
+                    'label': name, 'input @name': name
+                }).appendTo(url_fields);
+            }
+        },
+
+        createPresets: function () {
+            var html = '<select name="presets">';
+            for (var i=0, pair; pair=$this.presets[i]; i++) {
+                html += '<option value="'+pair[1]+'">'+pair[0]+'</option>';
+            }
+            html += '</select>';
+            $('.presets_field li').append(html);
+        },
+
+        wireUpControls: function () {
 
             $('#option_controls').submit(function () { return false; });
 
@@ -37,31 +86,6 @@ var Options = (function () {
                 return false;
             });
             
-            postMessage({ type: 'fetch_update_url' });
-
-        },
-
-        onMessage: function (event) {
-            switch (event.type) {
-                case 'receive_update_url':
-                    $this.update_url = event.update_url;
-                    var fields = $this.parseUrlFields($this.update_url);
-                    $this.updateFields(fields);
-                    break;
-            };
-        },
-
-        createFields: function () {
-            $('#option_controls ul li:not(.template)').remove();
-            var tmpl = $('#option_controls li.template');
-            var ul = $('#option_controls ul');
-
-            for (var i=0, name; name=$this.fields[i]; i++) {
-                tmpl.cloneTemplate({
-                    'label': name,
-                    'input @name': name
-                }).appendTo(ul);
-            }
         },
 
         parseUrlFields: function (url) {

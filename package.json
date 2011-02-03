@@ -1,9 +1,10 @@
 {
-    "name": "home-snippets-switcher", 
-    "license": "MPL 1.1/GPL 2.0/LGPL 2.1", 
-    "author": "", 
-    "version": "0.1", 
-    "fullName": "home-snippets-switcher", 
     "id": "jid0-WRIDmRdJMF3XFFZZwnaBhDniAN8", 
-    "description": "a basic add-on"
+    "name": "home-snippets-switcher", 
+    "version": "0.2", 
+    "fullName": "about:home snippet service switcher", 
+    "description": "Helps you to manage the snippet service used for about:home",
+    "license": "MPL 1.1/GPL 2.0/LGPL 2.1", 
+    "author": "l.m.orchard <l.m.orchard@pobox.com> (http://lmorchard.com)",
+    "url": "http://github.com/lmorchard/home-snippets-switcher"
 }
