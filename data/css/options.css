@@ -1,0 +1,9 @@
+body { font-family: "Lucida Grande", arial; font-size: 12px; }
+.template { display: none; }
+form fieldset { padding: 0.5em; }
+form fieldset legend { font-size: 150%; }
+form ul { list-style: none; margin: 0; padding: 0 }
+form ul li.field { margin-bottom: 0.75em; }
+form ul li.field label { display: block; font-weight: bold; margin-bottom: 0.25em; }
+form ul li.field input { width: 100%; }
+form .submit button { display: block; width: 100%; margin-bottom: 1em; margin-top: 1em; padding: 0.5em; }
