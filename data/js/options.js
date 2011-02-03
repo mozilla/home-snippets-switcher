@@ -16,14 +16,29 @@ var Options = (function () {
         },
 
         ready: function () {
+
             $this.createFields();
+
             $('#option_controls').submit(function () { return false; });
-            $('#option_controls .change').click(function () {
-                var url = $this.unparseUrlFields($this.extractFields());
-                console.log(url);
+
+            $('#option_controls .open').click(function () {
+                postMessage({ type: 'open_about_home' });
                 return false;
             });
+            
+            $('#option_controls .change').click(function () {
+                var url = $this.unparseUrlFields($this.extractFields());
+                postMessage({ type: 'set_update_url', update_url: url });
+                return false;
+            });
+            
+            $('#option_controls .restore').click(function () {
+                postMessage({ type: 'restore_update_url' });
+                return false;
+            });
+            
             postMessage({ type: 'fetch_update_url' });
+
         },
 
         onMessage: function (event) {
