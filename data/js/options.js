@@ -40,7 +40,7 @@ var Options = (function () {
             switch (event.type) {
                 case 'receive_update_url':
                     $this.update_url = event.update_url;
-                    $this.updateFields($this.parseUrlFields($this.update_url));
+                    $this.updateFields($this.parseUpdateUrl($this.update_url));
                     break;
             };
         },
@@ -58,6 +58,9 @@ var Options = (function () {
         },
 
         createPresets: function () {
+            // TODO: Make this work
+            // Tried inserting <option>s with cloneTemplate, but that seemed not to work
+            // This doesn't seem to work either:
             var html = '<select name="presets">';
             for (var i=0, pair; pair=$this.presets[i]; i++) {
                 html += '<option value="'+pair[1]+'">'+pair[0]+'</option>';
@@ -68,27 +71,29 @@ var Options = (function () {
 
         wireUpControls: function () {
 
-            $('#option_controls').submit(function () { return false; });
+            var controls = $('#option_controls');
 
-            $('#option_controls .open').click(function () {
+            controls.submit(function () { return false; });
+
+            $('.open', controls).click(function () {
                 postMessage({ type: 'open_about_home' });
                 return false;
             });
             
-            $('#option_controls .change').click(function () {
-                var url = $this.unparseUrlFields($this.extractFields());
+            $('.change', controls).click(function () {
+                var url = $this.buildUpdateUrl($this.extractFields());
                 postMessage({ type: 'set_update_url', update_url: url });
                 return false;
             });
             
-            $('#option_controls .restore').click(function () {
+            $('.restore', controls).click(function () {
                 postMessage({ type: 'restore_update_url' });
                 return false;
             });
             
         },
 
-        parseUrlFields: function (url) {
+        parseUpdateUrl: function (url) {
             var parts = url.split('/');
             var base_url = parts[0] + '//' + parts[2];
             var rest = parts.slice(3,13);
@@ -101,19 +106,18 @@ var Options = (function () {
             return out;
         },
 
-        unparseUrlFields: function (fields) {
-            var url = fields['base_url'];
+        buildUpdateUrl: function (fields) {
             var parts = [];
-            for (var i=1, name; name=$this.fields[i]; i++) {
+            for (var i=0, name; name=$this.fields[i]; i++) {
                 parts.push(fields[name]);
             }
-            return url + '/' + parts.join('/') + '/';
+            return parts.join('/') + '/';
         },
 
         updateFields: function (fields) {
             var form = $('#option_controls');
-            for (var k in fields) {
-                form.find('input[name="'+k+'"]').val(fields[k]);
+            for (var i=0, name; name=$this.fields[i]; i++) {
+                form.find('input[name="'+name+'"]').val(fields[name]);
             }
         },
 
