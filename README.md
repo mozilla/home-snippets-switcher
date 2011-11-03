@@ -14,6 +14,11 @@ See also:
 
 * <https://wiki.mozilla.org/Firefox/Projects/Firefox_Start/Snippet_Service>
 
+## How to Install
+
+Use the Downloads tab above to download an XPI file that you can use to install the addon. 
+Open the file in Firefox to trigger the install.
+
 ## TODO
 
 * Should this be merged into home-snippets-server project?
