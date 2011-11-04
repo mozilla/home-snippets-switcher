@@ -16,8 +16,7 @@ See also:
 
 ## How to Install
 
-Use the Downloads tab above to download an XPI file that you can use to install the addon. 
-Open the file in Firefox to trigger the install.
+You can install the addon from AMO: https://addons.mozilla.org/en-US/firefox/addon/home-snippets-switcher/
 
 ## TODO
 
